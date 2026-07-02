@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dashboard interactivo de partidas de Fortnite con filtros, cards y gráficos." />
+  <title>Fortnite Match Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <h1 class="site-header__title">Fortnite Match Dashboard</h1>
+    <p class="site-header__subtitle">Panel táctico de partidas</p>
+  </header>
+
+  <main class="dashboard">
+    <!-- Controles: búsqueda y filtro -->
+    <section class="controls" aria-label="Filtros del dashboard">
+      <div class="control-group">
+        <label for="search-input">Buscar jugador</label>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Escribe un nombre..."
+          aria-label="Buscar por nombre de jugador"
+          autocomplete="off"
+        />
+      </div>
+      <div class="control-group">
+        <label for="mode-select">Filtrar por modo</label>
+        <select id="mode-select" aria-label="Filtrar por modo de juego">
+          <option value="all">Todos</option>
+          <option value="Solo">Solo</option>
+          <option value="Dúos">Dúos</option>
+          <option value="Escuadrones">Escuadrones</option>
+        </select>
+      </div>
+      <button id="open-create-modal" class="btn btn--primary">+ Agregar partida</button>
+    </section>
+
+    <!-- KPIs / estadísticas -->
+    <section class="stats" aria-label="Resumen de estadísticas">
+      <article class="stat-card">
+        <div class="stat-card__value" id="stat-total">0</div>
+        <div class="stat-card__label">Partidas</div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-card__value" id="stat-wins">0</div>
+        <div class="stat-card__label">Victory Royales</div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-card__value" id="stat-avg-kills">0</div>
+        <div class="stat-card__label">Promedio kills</div>
+      </article>
+    </section>
+
+    <!-- Gráfico de distribución por modo -->
+    <section class="chart-section" aria-label="Gráfico de partidas por modo">
+      <h2 class="section-title">Distribución por modo</h2>
+      <div class="chart-container">
+        <canvas id="mode-chart"></canvas>
+      </div>
+    </section>
+
+    <!-- Listado de partidas -->
+    <section class="cards-section" aria-label="Listado de partidas">
+      <h2 class="section-title">Partidas</h2>
+
+      <!-- Estado de carga inicial simulado -->
+      <div class="loading-state" id="loading-state">
+        <div class="spinner" role="status" aria-label="Cargando"></div>
+        <p>Cargando partidas...</p>
+      </div>
+
+      <!-- Estado vacío -->
+      <div class="empty-state" id="empty-state" hidden>
+        <span class="empty-state__icon">🔍</span>
+        <h3>No se encontraron partidas</h3>
+        <p>Intenta ajustar tu búsqueda o el filtro de modo.</p>
+      </div>
+
+      <!-- Grid de cards, poblado dinámicamente por app.js -->
+      <div id="cards-container" class="cards-grid" hidden></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>Fortnite Match Dashboard</strong> · HTML + CSS + JavaScript puro · Chart.js</p>
+  </footer>
+
+  <!-- Modal de creación de partida -->
+  <dialog id="create-modal" class="modal">
+    <div class="modal__content">
+      <h2 class="modal__title">Agregar nueva partida</h2>
+      <form id="create-form" class="create-form">
+        <div class="form-group">
+          <label for="player_name">Nombre del jugador</label>
+          <input
+            type="text"
+            id="player_name"
+            name="player_name"
+            required
+            minlength="3"
+            maxlength="15"
+            placeholder="3-15 caracteres"
+          />
+        </div>
+        <div class="form-group">
+          <label for="kills">Kills</label>
+          <input
+            type="number"
+            id="kills"
+            name="kills"
+            required
+            min="0"
+            max="20"
+            placeholder="0-20"
+          />
+        </div>
+        <div class="form-group">
+          <label for="match_date">Fecha</label>
+          <input
+            type="date"
+            id="match_date"
+            name="match_date"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="mode">Modo</label>
+          <select id="mode" name="mode" required>
+            <option value="Solo">Solo</option>
+            <option value="Dúos">Dúos</option>
+            <option value="Escuadrones">Escuadrones</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="victory_royale">Victory Royale</label>
+          <select id="victory_royale" name="victory_royale" required>
+            <option value="false">No</option>
+            <option value="true">Sí</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="button" id="close-create-modal" class="btn btn--secondary">Cancelar</button>
+          <button type="submit" class="btn btn--primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Módulos JS: data (dataset), filters (lógica de filtrado) y app (orquestación/DOM) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
+
